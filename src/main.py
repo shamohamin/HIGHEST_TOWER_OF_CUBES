@@ -1,5 +1,5 @@
 import tkinter as tk
-from kntu.logic.cube import Cube
+from src.logic.cube import Cube
 import copy
 import random
 import time
