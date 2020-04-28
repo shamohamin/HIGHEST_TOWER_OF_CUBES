@@ -11,3 +11,4 @@ class Cube:
     def __repr__(self):
         return "[{} {} {} {} {} {} {} ]".format(self.weight,
                                                     self.up, self.down, self.left, self.right, self.back, self.front)
+
