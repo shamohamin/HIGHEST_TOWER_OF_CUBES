@@ -2,7 +2,7 @@ import copy
 from src.logic.cube import Cube
 
 
-def permutation(arr, ui):
+def permutation(arr: list, ui):
     arr_holder = arr.copy()
     for c in arr_holder:
         hold = copy.copy(c)
@@ -26,5 +26,40 @@ def permutation(arr, ui):
         ui.show_perm(arr[-1])
 
 
-def make_highest_tower(arr):
-    pass
+def make_highest_tower(arr: list, ui):
+    sol, memory = list(), {}
+    arr = sorted(arr, key=lambda cube: cube.weight, reverse=False)
+
+    try:
+        # bottom up manner
+        for (i, x) in enumerate(arr):
+            bottom_cube, hold_possible_towers = x, [x]
+            for j in range(i - 1, -1, -1):
+                if memory.get(hashing(arr[j])) is None:
+                    if bottom_cube.weight > arr[j].weight and bottom_cube.up == arr[j].down:
+                        hold_possible_towers.append(arr[j])
+                        bottom_cube = arr[j]
+                else:
+                    memoize = memory.get(hashing(arr[j]))
+                    # copy memoize method
+                    for y in memoize:
+                        if bottom_cube.weight > y.weight:
+                            hold_possible_towers.append(y)
+                    break
+            memory[hashing(hold_possible_towers[0])] = hold_possible_towers
+            sol.append(hold_possible_towers)
+    except IndexError:
+        ui.show_error("Index out of bounds")
+    except StopIteration:
+        pass
+    except KeyError:
+        pass
+    else:
+        for x in sol:
+            print(x)
+
+    ui.draw(sol[-1])
+
+
+def hashing(cube):
+    return str(cube.up) + str(cube.down) + str(cube.weight)
