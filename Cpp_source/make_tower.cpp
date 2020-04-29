@@ -93,7 +93,6 @@ void make_tower(vector<cube> cubes){
                 }
             }else{
                 vector<cube> memoize = memory.find(set_hash(cubes.at(j)))->second ;
-                cout << "hello" << endl ;
                 //copy memoize array
                 for(auto c : memoize){
                     if(c.wieght < up.wieght)
