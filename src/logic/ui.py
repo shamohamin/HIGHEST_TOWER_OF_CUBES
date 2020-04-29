@@ -6,21 +6,22 @@ import random
 class UI(tk.Frame):
     def __init__(self, master=None, *args, **kwargs):
         super().__init__(master=master, *args, **kwargs)
-        self.canvas = tk.Canvas(self, width=400, height=400)
+        self.canvas = tk.Canvas(self, width=600, height=600)
         self.colors = ["red", "blue", "green", "purple", "yellow", "white"]
 
     def draw(self, arr):
-        x_pos, y_pos, last_weight = 200, 200, arr[0].weight
+        x_pos, y_pos, last_weight = 300, 450, arr[0].weight
         for x in arr:
             time.sleep(1)
-            self._make_rectangle(x_pos, y_pos, 50 / x.weight)
-            if last_weight != x.weight:
-                last_weight = x.weight
-                y_pos -= 50
+            self._make_rectangle(x_pos, y_pos, 20 * x.weight)
+
+            y_pos -= 20 * x.weight
+            x_pos += 10
+
             self._packing()
 
     def show_perm(self, x):
-        time.sleep(1)
+        time.sleep(0.25)
         self._make_rectangle(200, 200, 20 * x.weight)
         self._packing()
         self.canvas.delete("all")
@@ -28,6 +29,10 @@ class UI(tk.Frame):
     def _packing(self):
         self.canvas.update()
         self.canvas.pack()
+        self.pack()
+
+    def show_error(self, error_msg):
+        tk.Label(self, text=error_msg).pack()
         self.pack()
 
     def _make_rectangle(self, x, y, wieght):
