@@ -72,11 +72,8 @@ void permutation(vector<cube> &cubes){
 
 void make_tower(vector<cube> cubes){
     vector<vector<cube> > sol ;
+    //sort in ASC order
     sort(cubes.begin(), cubes.end(), compare);
-
-    for(cube c : cubes){
-            cout << "[" << c.wieght << " " << c.side1 << " " << c.side2 << " " << c.side3 << " " <<  c.side4 << " " << c.side5 << " " << c.side6 << "] " ;
-    }
     map<string, vector<cube> > memory ;
 
     for(int i = 0 ; i < cubes.size(); i++){
@@ -84,21 +81,22 @@ void make_tower(vector<cube> cubes){
         vector<cube> holder ;
         holder.push_back(up);
         for(int j = i - 1  ; j >= 0; j--) {
-            if(memory.find(set_hash(cubes.at(j))) == memory.end()){
-                if( up.side1 == cubes.at(j).side6 &&
-                    up.wieght > cubes.at(j).wieght
-                    ){
+            counter++;
+            if( up.side6 == cubes.at(j).side1 &&
+                up.wieght > cubes.at(j).wieght
+                ){
+                if(memory.find(set_hash(cubes.at(j))) == memory.end()){
                     holder.push_back(cubes.at(j)) ;
                     up = cubes.at(j) ;
+                }else{
+                    vector<cube> memoize = memory.find(set_hash(cubes.at(j)))->second ;
+                    //copy memoize array
+                    for(auto c : memoize){
+                        if(c.wieght < up.wieght && up.side1 == c.side6)
+                            holder.push_back(c) , up = c ;
+                    }
+                    break ;
                 }
-            }else{
-                vector<cube> memoize = memory.find(set_hash(cubes.at(j)))->second ;
-                //copy memoize array
-                for(auto c : memoize){
-                    if(c.wieght < up.wieght)
-                        holder.push_back(c) , up = c ;
-                }
-                break ;
             }
         }
         memory[set_hash(holder[0])] = holder ;
