@@ -11,7 +11,6 @@ def permutation(arr: list, ui):
         arr.append(Cube(c.weight, right=hold.down, up=hold.left, down=hold.right, left=hold.up, back=hold.back,
                         front=hold.front))
         ui.show_perm(arr[-1])
-
         arr.append(Cube(c.weight, right=hold.up, up=hold.right, down=hold.left, left=hold.down, back=hold.back,
                         front=hold.front))
         ui.show_perm(arr[-1])
@@ -27,7 +26,7 @@ def permutation(arr: list, ui):
 
 
 def make_highest_tower(arr: list, ui):
-    sol, memory = list(), {}
+    sol, memory, tower = list(), {}, []
     arr = sorted(arr, key=lambda cube: cube.weight, reverse=False)
 
     try:
@@ -35,17 +34,17 @@ def make_highest_tower(arr: list, ui):
         for (i, x) in enumerate(arr):
             bottom_cube, hold_possible_towers = x, [x]
             for j in range(i - 1, -1, -1):
-                if memory.get(hashing(arr[j])) is None:
-                    if bottom_cube.weight > arr[j].weight and bottom_cube.up == arr[j].down:
+                if bottom_cube.weight > arr[j].weight and bottom_cube.up == arr[j].down:
+                    if memory.get(hashing(arr[j])) is None:
                         hold_possible_towers.append(arr[j])
                         bottom_cube = arr[j]
-                else:
-                    memoize = memory.get(hashing(arr[j]))
-                    # copy memoize method
-                    for y in memoize:
-                        if bottom_cube.weight > y.weight:
-                            hold_possible_towers.append(y)
-                    break
+                    else:
+                        memoize = memory.get(hashing(arr[j]))
+                        # copy memoize array
+                        for y in memoize:
+                            if bottom_cube.weight > y.weight:
+                                hold_possible_towers.append(y)
+                        break
             memory[hashing(hold_possible_towers[0])] = hold_possible_towers
             sol.append(hold_possible_towers)
     except IndexError:
@@ -55,10 +54,14 @@ def make_highest_tower(arr: list, ui):
     except KeyError:
         pass
     else:
+        max_tower = 0
         for x in sol:
             print(x)
+            if max_tower < len(x):
+                tower = x
+                max_tower = len(x)
 
-    ui.draw(sol[-1])
+    ui.draw(tower)
 
 
 def hashing(cube):
